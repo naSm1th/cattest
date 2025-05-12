@@ -12,7 +12,7 @@ repos:
   poky:
     url: https://git.yoctoproject.org/git/poky
     path: sources/poky
-    refspec: scarthgap
+    branch: scarthgap
     layers:
       meta:
       meta-poky:
@@ -21,19 +21,19 @@ repos:
   meta-openembedded:
     url: http://git.openembedded.org/meta-openembedded
     path: sources/meta-openembedded
-    refspec: scarthgap
+    branch: scarthgap
     layers:
       meta-oe:
     
   meta-raspberrypi:
     url: http://git.yoctoproject.org/meta-raspberrypi
     path: sources/meta-raspberrypi
-    refspec: scarthgap
+    branch: scarthgap
 
   meta-cattest:
     url: https://github.com/naSm1th/meta-cattest.git
     path: sources/meta-cattest
-    refspec: main
+    branch: main
 
 bblayers_conf_header:
   standard: |
@@ -49,8 +49,30 @@ local_conf_header:
     SDKMACHINE = "x86_64"
     USER_CLASSES = "buildstats"
     PATCHRESOLVE = "noop"
+    MACHINE_FEATURES += "pitft"
+
+    RPI_EXTRA_CONFIG = ' \n \
+        # ili9341 SPI 2.2\" TFT \n \
+        dtoverlay=fbtft,spi0-0,ili9341,bgr \n \
+        dtparam=reset_pin=22 \n \
+        dtparam=dc_pin=27 \n \
+        dtparam=led_pin=17 \n \
+        dtparam=rotate=270 \n \
+        '
+
+    CORE_IMAGE_EXTRA_INSTALL += "directfb nyancat"
+
+    RPI_KERNEL_DEVICETREE_OVERLAYS = " \
+        overlays/fbtft.dtbo \
+        overlays/overlay_map.dtb \
+        overlays/vc4-fkms-v3d.dtbo \
+        overlays/vc4-fkms-v3d-pi4.dtbo \
+        overlays/vc4-kms-v3d.dtbo \
+        overlays/vc4-kms-v3d-pi4.dtbo \
+    "
+
   debug-tweaks: |
-    EXTRA_IMAGE_FEATURES = "debug-tweaks"
+    EXTRA_IMAGE_FEATURES = "debug-tweaks ssh-server-dropbear"
   diskmon: |
     BB_DISKMON_DIRS = "\
         STOPTASKS,${TMPDIR},1G,100K \
