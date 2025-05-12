@@ -7,7 +7,7 @@ target:
   - core-image-minimal
 
 repos:
-  meta-raspberry:
+  cattest:
 
   poky:
     url: https://git.yoctoproject.org/git/poky
