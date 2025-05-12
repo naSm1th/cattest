@@ -1,0 +1,5 @@
+# Ignore Yocto layers
+sources
+
+# Ignore build directory
+build
