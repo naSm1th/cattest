@@ -41,8 +41,6 @@ bblayers_conf_header:
     BBPATH = "${TOPDIR}"
     BBFILES ?= ""
 local_conf_header:
-  reduce_diskspace: |
-    INHERIT += "rm_work_and_downloads"
   standard: |
     CONF_VERSION = "2"
     PACKAGE_CLASSES = "package_rpm"
@@ -70,16 +68,7 @@ local_conf_header:
         overlays/vc4-kms-v3d.dtbo \
         overlays/vc4-kms-v3d-pi4.dtbo \
     "
+    EXTRA_IMAGE_FEATURES += "ssh-server-dropbear"
 
   debug-tweaks: |
-    EXTRA_IMAGE_FEATURES = "debug-tweaks ssh-server-dropbear"
-  diskmon: |
-    BB_DISKMON_DIRS = "\
-        STOPTASKS,${TMPDIR},1G,100K \
-        STOPTASKS,${DL_DIR},1G,100K \
-        STOPTASKS,${SSTATE_DIR},1G,100K \
-        STOPTASKS,/tmp,100M,100K \
-        HALT,${TMPDIR},100M,1K \
-        HALT,${DL_DIR},100M,1K \
-        HALT,${SSTATE_DIR},100M,1K \
-        HALT,/tmp,10M,1K"
+    EXTRA_IMAGE_FEATURES += "debug-tweaks"
